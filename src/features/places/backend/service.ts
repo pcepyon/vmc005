@@ -179,7 +179,7 @@ export const getPlaceByNaverId = async (
   const searchResult = await searchPlaces(config, naverPlaceId, 1);
 
   if (!searchResult.ok) {
-    return searchResult;
+    return searchResult as HandlerResult<PlaceResponse, PlaceServiceError, unknown>;
   }
 
   if (searchResult.data.places.length === 0) {

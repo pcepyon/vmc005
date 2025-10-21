@@ -74,44 +74,50 @@ export const SearchResultsModal = () => {
 
           {data && data.places.length > 0 && (
             <div className="divide-y">
-              {data.places.map((place) => (
-                <div
-                  key={place.id}
-                  className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-                  onClick={() => handlePlaceClick(place)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">{place.name}</h3>
-                      {place.category && (
-                        <p className="text-sm text-gray-600 mt-1">{place.category}</p>
-                      )}
-                      <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4" />
-                        <span>{place.roadAddress || place.address}</span>
-                      </div>
-                      {place.phone && (
-                        <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-                          <Phone className="h-4 w-4" />
-                          <span>{place.phone}</span>
+              {data.places.map((place) => {
+                if (!place.id || typeof place.latitude !== 'number' || typeof place.longitude !== 'number') {
+                  return null;
+                }
+
+                return (
+                  <div
+                    key={place.id}
+                    className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => handlePlaceClick({ id: place.id!, latitude: place.latitude!, longitude: place.longitude! })}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg">{place.name}</h3>
+                        {place.category && (
+                          <p className="text-sm text-gray-600 mt-1">{place.category}</p>
+                        )}
+                        <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                          <MapPin className="h-4 w-4" />
+                          <span>{place.roadAddress || place.address}</span>
                         </div>
-                      )}
+                        {place.phone && (
+                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+                            <Phone className="h-4 w-4" />
+                            <span>{place.phone}</span>
+                          </div>
+                        )}
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="ml-4"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewDetail({ id: place.id! });
+                        }}
+                      >
+                        상세보기
+                        <ChevronRight className="h-4 w-4 ml-1" />
+                      </Button>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="ml-4"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewDetail(place);
-                      }}
-                    >
-                      상세보기
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>
