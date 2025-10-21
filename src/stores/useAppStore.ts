@@ -8,6 +8,18 @@ interface ModalHistoryItem {
     placeId?: string;
     naverPlaceId?: string;
     searchQuery?: string;
+    placeName?: string;
+    placeAddress?: string;
+    placeData?: {
+      id: string;
+      name: string;
+      address: string;
+      roadAddress?: string;
+      phone?: string;
+      latitude: number;
+      longitude: number;
+      category?: string;
+    };
   };
 }
 
