@@ -21,8 +21,8 @@ export default async function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <head>
         <Script
-          strategy="beforeInteractive"
-          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NCP_CLIENT_ID}`}
+          strategy="afterInteractive"
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NCP_CLIENT_ID}&submodules=geocoder`}
         />
       </head>
       <body className="antialiased font-sans">
