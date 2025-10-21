@@ -127,6 +127,7 @@ export const getPlaceByNaverId = async (
   client: SupabaseClient,
   config: AppConfig,
   naverPlaceId: string,
+  providedPlaceData?: NaverPlace,
 ): Promise<HandlerResult<PlaceResponse, PlaceServiceError, unknown>> => {
   const { data: existingPlace, error: fetchError } = await client
     .from(PLACES_TABLE)
@@ -176,17 +177,23 @@ export const getPlaceByNaverId = async (
     return success(parsed.data);
   }
 
-  const searchResult = await searchPlaces(config, naverPlaceId, 1);
+  let placeData: NaverPlace;
 
-  if (!searchResult.ok) {
-    return searchResult as HandlerResult<PlaceResponse, PlaceServiceError, unknown>;
+  if (providedPlaceData) {
+    placeData = providedPlaceData;
+  } else {
+    const searchResult = await searchPlaces(config, naverPlaceId, 1);
+
+    if (!searchResult.ok) {
+      return searchResult as HandlerResult<PlaceResponse, PlaceServiceError, unknown>;
+    }
+
+    if (searchResult.data.places.length === 0) {
+      return failure(404, placeErrorCodes.notFound, '장소를 찾을 수 없습니다');
+    }
+
+    placeData = searchResult.data.places[0];
   }
-
-  if (searchResult.data.places.length === 0) {
-    return failure(404, placeErrorCodes.notFound, '장소를 찾을 수 없습니다');
-  }
-
-  const placeData = searchResult.data.places[0];
 
   const { data: newPlace, error: insertError } = await client
     .from(PLACES_TABLE)

@@ -39,14 +39,34 @@ export const useSearchPlaces = (query: string, enabled: boolean = true) => {
   });
 };
 
-export const usePlaceByNaverId = (naverPlaceId: string | null) => {
+export const usePlaceByNaverId = (
+  naverPlaceId: string | null,
+  placeData?: {
+    id: string;
+    name: string;
+    address: string;
+    roadAddress?: string;
+    phone?: string;
+    latitude: number;
+    longitude: number;
+    category?: string;
+  }
+) => {
   return useQuery({
     queryKey: ['places', 'naver', naverPlaceId],
     queryFn: async () => {
-      const response = await apiClient.get<ApiSuccessResponse<PlaceResponse>>(
-        `/api/places/${naverPlaceId}`
-      );
-      return response.data.data;
+      if (placeData) {
+        const response = await apiClient.post<ApiSuccessResponse<PlaceResponse>>(
+          `/api/places/${naverPlaceId}`,
+          { placeData }
+        );
+        return response.data.data;
+      } else {
+        const response = await apiClient.get<ApiSuccessResponse<PlaceResponse>>(
+          `/api/places/${naverPlaceId}`
+        );
+        return response.data.data;
+      }
     },
     enabled: !!naverPlaceId,
     staleTime: 10 * 60 * 1000,

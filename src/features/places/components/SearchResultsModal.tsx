@@ -29,9 +29,19 @@ export const SearchResultsModal = () => {
     setHighlightedMarker(place.id);
   };
 
-  const handleViewDetail = (place: { id: string }) => {
+  const handleViewDetail = (place: {
+    id: string;
+    name: string;
+    address: string;
+    roadAddress?: string;
+    phone?: string;
+    latitude: number;
+    longitude: number;
+    category?: string;
+  }) => {
     openModal('place-detail', {
       naverPlaceId: place.id,
+      placeData: place,
     });
   };
 
@@ -108,7 +118,16 @@ export const SearchResultsModal = () => {
                         className="ml-4"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleViewDetail({ id: place.id! });
+                          handleViewDetail({
+                            id: place.id!,
+                            name: place.name!,
+                            address: place.address!,
+                            roadAddress: place.roadAddress,
+                            phone: place.phone,
+                            latitude: place.latitude!,
+                            longitude: place.longitude!,
+                            category: place.category,
+                          });
                         }}
                       >
                         상세보기

@@ -125,4 +125,48 @@ export const registerPlacesRoutes = (app: Hono<AppEnv>) => {
 
     return respond(c, result);
   });
+
+  app.post('/api/places/:naver_place_id', async (c) => {
+    const parsedParams = PlaceParamsSchema.safeParse({
+      naver_place_id: c.req.param('naver_place_id'),
+    });
+
+    if (!parsedParams.success) {
+      return respond(
+        c,
+        failure(
+          400,
+          'INVALID_PLACE_PARAMS',
+          '장소 ID가 유효하지 않습니다.',
+          parsedParams.error.format(),
+        ),
+      );
+    }
+
+    const body = await c.req.json();
+    const supabase = getSupabase(c);
+    const config = getConfig(c);
+    const logger = getLogger(c);
+
+    const result = await getPlaceByNaverId(
+      supabase,
+      config,
+      parsedParams.data.naver_place_id,
+      body.placeData,
+    );
+
+    if (!result.ok) {
+      const errorResult = result as ErrorResult<PlaceServiceError, unknown>;
+
+      if (errorResult.error.code === placeErrorCodes.fetchError) {
+        logger.error('장소 조회 실패', errorResult.error.message);
+      } else if (errorResult.error.code === placeErrorCodes.createError) {
+        logger.error('장소 생성 실패', errorResult.error.message);
+      }
+
+      return respond(c, result);
+    }
+
+    return respond(c, result);
+  });
 };

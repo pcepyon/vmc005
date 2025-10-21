@@ -16,12 +16,13 @@ export const PlaceDetailModal = () => {
 
   const currentModal = modalHistory[modalHistory.length - 1];
   const naverPlaceId = currentModal?.data?.naverPlaceId || null;
+  const placeData = currentModal?.data?.placeData || undefined;
 
   const {
     data: place,
     isLoading: isLoadingPlace,
     isError: isErrorPlace,
-  } = usePlaceByNaverId(naverPlaceId);
+  } = usePlaceByNaverId(naverPlaceId, placeData);
 
   const {
     data: reviewsData,
