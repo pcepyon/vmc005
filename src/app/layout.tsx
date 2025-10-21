@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import Providers from "./providers";
 import { loadCurrentUser } from "@/features/auth/server/load-current-user";
@@ -18,6 +19,12 @@ export default async function RootLayout({
 
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <Script
+          strategy="beforeInteractive"
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NCP_CLIENT_ID}`}
+        />
+      </head>
       <body className="antialiased font-sans">
         <Providers>
           <CurrentUserProvider initialState={currentUser}>
