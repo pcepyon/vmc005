@@ -6,7 +6,6 @@ import {
 } from '@/backend/http/response';
 import type { AppConfig } from '@/backend/hono/context';
 import {
-  NaverPlaceSchema,
   PlaceTableRowSchema,
   PlaceResponseSchema,
   PlacesWithReviewsItemSchema,

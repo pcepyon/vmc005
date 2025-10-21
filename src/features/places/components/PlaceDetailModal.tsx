@@ -5,7 +5,7 @@ import { usePlaceByNaverId } from '../hooks/usePlaces';
 import { useReviews } from '@/features/reviews/hooks/useReviews';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X, MapPin, Phone, Loader2, Star } from 'lucide-react';
+import { X, MapPin, Phone, Loader2, Star, Plus } from 'lucide-react';
 import { ReviewList } from '@/features/reviews/components/ReviewList';
 import { ReviewStats } from '@/features/reviews/components/ReviewStats';
 
@@ -13,6 +13,7 @@ export const PlaceDetailModal = () => {
   const modalState = useAppStore((state) => state.modalState);
   const modalHistory = useAppStore((state) => state.modalHistory);
   const goBackModal = useAppStore((state) => state.goBackModal);
+  const openModal = useAppStore((state) => state.openModal);
 
   const currentModal = modalHistory[modalHistory.length - 1];
   const naverPlaceId = currentModal?.data?.naverPlaceId || null;
@@ -79,10 +80,25 @@ export const PlaceDetailModal = () => {
               </div>
 
               <div className="border-t pt-6">
-                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                  <Star className="h-5 w-5 text-yellow-500" />
-                  리뷰
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold flex items-center gap-2">
+                    <Star className="h-5 w-5 text-yellow-500" />
+                    리뷰
+                  </h3>
+                  <Button
+                    onClick={() =>
+                      openModal('review-write', {
+                        placeId: place.id,
+                        placeName: place.name,
+                        placeAddress: place.address,
+                      })
+                    }
+                    size="sm"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    리뷰 작성
+                  </Button>
+                </div>
 
                 {isLoadingReviews && (
                   <div className="flex items-center justify-center h-20">
